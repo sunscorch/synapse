@@ -1,0 +1,565 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "spark34",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "f6081c1d-2525-49d8-83ff-04b8f0afb075"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ed0ef431-3deb-492c-a73f-2ac366d8ebba/resourceGroups/sea-adb-rg/providers/Microsoft.Synapse/workspaces/sea-synaps/bigDataPools/spark34",
+				"name": "spark34",
+				"type": "Spark",
+				"endpoint": "https://sea-synaps.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spark34",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.range(1000).count()"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%configure -f\n",
+					"{\n",
+					"  \"conf\":\n",
+					"  {\n",
+					"      \"spark.files\": \"abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/role.json,abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/role_2.json\"\n",
+					"\n",
+					"  }\n",
+					"}"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!ls"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!ls"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"import java.io.FileInputStream\n",
+					"import java.security.KeyStore\n",
+					"import javax.net.ssl.{HttpsURLConnection, SSLContext, TrustManagerFactory}\n",
+					"import java.net.URL\n",
+					"\n",
+					"\n",
+					"  try {\n",
+					"    // Load the custom trust store\n",
+					"    val trustStorePath = \"/usr/lib/jvm/msopenjdk-11/lib/security/cacerts\"\n",
+					"    val trustStorePassword = \"changeit\"\n",
+					"    val trustStore = KeyStore.getInstance(KeyStore.getDefaultType)\n",
+					"    val trustStoreStream = new FileInputStream(trustStorePath)\n",
+					"    System.setProperty(\"javax.net.debug\", \"all\");\n",
+					"    try {\n",
+					"      trustStore.load(trustStoreStream, trustStorePassword.toCharArray)\n",
+					"    } finally {\n",
+					"      trustStoreStream.close()\n",
+					"    }\n",
+					"\n",
+					"    // Initialize the TrustManagerFactory with the trust store\n",
+					"    val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm)\n",
+					"    trustManagerFactory.init(trustStore)\n",
+					"\n",
+					"    // Create and initialize the SSLContext with the custom trust store\n",
+					"    val sslContext = SSLContext.getInstance(\"TLS\")\n",
+					"    sslContext.init(null, trustManagerFactory.getTrustManagers, new java.security.SecureRandom)\n",
+					"\n",
+					"    // Set the default SSL context to use the custom trust store\n",
+					"    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory)\n",
+					"\n",
+					"    // Now you can make HTTPS requests using the custom trust store\n",
+					"    val url = new URL(\"https://google.com\")\n",
+					"    val connection = url.openConnection().asInstanceOf[HttpsURLConnection]\n",
+					"    connection.connect()\n",
+					"\n",
+					"    println(s\"Response Code: ${connection.getResponseCode}\")\n",
+					"\n",
+					"  } catch {\n",
+					"    case e: Exception => e.printStackTrace()\n",
+					"  }\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!echo $JAVA_HOME/lib/security/"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\n",
+					"desc formatted test"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!pwd"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%fs cp abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/role.json file:///mnt/var/hadoop/tmp/nm-local-dir/usercache/trusted-service-user/appcache/application_1724905187446_0003/container_1724905187446_0003_01_000001"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"import java.nio.file.Paths\n",
+					"\n",
+					" val currentPath = Paths.get(\"\").toAbsolutePath.toString\n",
+					"    println(s\"Current Working Directory: $currentPath\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%spark\n",
+					"import java.io.FileInputStream\n",
+					"import java.security.KeyStore\n",
+					"import javax.net.ssl.{HttpsURLConnection, SSLContext, TrustManagerFactory}\n",
+					"import java.net.URL\n",
+					"\n",
+					"\n",
+					"  try {\n",
+					"    // Load the custom trust store\n",
+					"    val trustStorePath = \"cacerts_as400_wdp\"\n",
+					"    val trustStorePassword = \"changeit\"\n",
+					"    val trustStore = KeyStore.getInstance(KeyStore.getDefaultType)\n",
+					"    val trustStoreStream = new FileInputStream(trustStorePath)\n",
+					"\n",
+					"    try {\n",
+					"      trustStore.load(trustStoreStream, trustStorePassword.toCharArray)\n",
+					"    } finally {\n",
+					"      trustStoreStream.close()\n",
+					"    }\n",
+					"\n",
+					"    // Initialize the TrustManagerFactory with the trust store\n",
+					"    val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm)\n",
+					"    trustManagerFactory.init(trustStore)\n",
+					"\n",
+					"    // Create and initialize the SSLContext with the custom trust store\n",
+					"    val sslContext = SSLContext.getInstance(\"TLS\")\n",
+					"    sslContext.init(null, trustManagerFactory.getTrustManagers, new java.security.SecureRandom)\n",
+					"\n",
+					"    // Set the default SSL context to use the custom trust store\n",
+					"    HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory)\n",
+					"\n",
+					"    // Now you can make HTTPS requests using the custom trust store\n",
+					"    val url = new URL(\"https://wdp-registry.api.srv.westpac.com.au\")\n",
+					"    val connection = url.openConnection().asInstanceOf[HttpsURLConnection]\n",
+					"    connection.connect()\n",
+					"\n",
+					"    println(s\"Response Code: ${connection.getResponseCode}\")\n",
+					"\n",
+					"  } catch {\n",
+					"    case e: Exception => e.printStackTrace()\n",
+					"  }\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from IPython.display import HTML, display\r\n",
+					"\r\n",
+					"html_code = \"\"\"\r\n",
+					"<div style=\"margin: 20px;\">\r\n",
+					"    <form id=\"loginForm\">\r\n",
+					"        <label for=\"username\">用户名:</label>\r\n",
+					"        <input type=\"text\" id=\"username\" name=\"username\" placeholder=\"请输入用户名\"/><br><br>\r\n",
+					"        <label for=\"password\">密码:</label>\r\n",
+					"        <input type=\"password\" id=\"password\" name=\"password\" placeholder=\"请输入密码\"/><br><br>\r\n",
+					"        <input type=\"button\" value=\"提交\" onclick=\"handleSubmit()\"/>\r\n",
+					"    </form>\r\n",
+					"    <div id=\"output\" style=\"margin-top: 20px;\"></div>\r\n",
+					"</div>\r\n",
+					"<script>\r\n",
+					"    function handleSubmit(){\r\n",
+					"        var username = document.getElementById('username').value;\r\n",
+					"        var password = document.getElementById('password').value;\r\n",
+					"        // 将用户名和密码传递给 Python 变量\r\n",
+					"        var command = `global_username = '${username}'; global_password = '${password}';`;\r\n",
+					"        IPython.notebook.kernel.execute(command);\r\n",
+					"        document.getElementById('output').innerHTML = '<p><b>用户名:</b> ' + username + '</p>' + \r\n",
+					"                                                       '<p><b>密码:</b> ' + password + '</p>';\r\n",
+					"    }\r\n",
+					"</script>\r\n",
+					"\"\"\"\r\n",
+					"\r\n",
+					"display(HTML(html_code))"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import ipywidgets as widgets\r\n",
+					"from IPython.display import display\r\n",
+					"\r\n",
+					"# 创建用户名输入框\r\n",
+					"username = widgets.Text(\r\n",
+					"    value='',\r\n",
+					"    placeholder='请输入用户名',\r\n",
+					"    description='用户名:',\r\n",
+					"    disabled=False\r\n",
+					")\r\n",
+					"\r\n",
+					"# 创建密码输入框\r\n",
+					"password = widgets.Password(\r\n",
+					"    value='',\r\n",
+					"    placeholder='请输入密码',\r\n",
+					"    description='密码:',\r\n",
+					"    disabled=False\r\n",
+					")\r\n",
+					"\r\n",
+					"# 创建提交按钮\r\n",
+					"button = widgets.Button(\r\n",
+					"    description='提交',\r\n",
+					"    disabled=False,\r\n",
+					"    button_style='',  # 也可以设置 'success', 'info', 'warning', 'danger'\r\n",
+					"    tooltip='点击提交'\r\n",
+					")\r\n",
+					"\r\n",
+					"# 用于显示输出的区域\r\n",
+					"output = widgets.Output()\r\n",
+					"\r\n",
+					"# 按钮点击事件处理函数\r\n",
+					"def on_button_clicked(b):\r\n",
+					"    with output:\r\n",
+					"        output.clear_output()  # 清除之前的输出\r\n",
+					"        print(\"用户名：\", username.value)\r\n",
+					"        print(\"密码：\", password.value)\r\n",
+					"\r\n",
+					"# 将事件处理函数绑定到按钮点击事件上\r\n",
+					"button.on_click(on_button_clicked)\r\n",
+					"\r\n",
+					"# 显示所有组件\r\n",
+					"display(username, password, button, output)"
+				],
+				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%pip uninstall ipywidgets"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%conda install -c conda-forge ipywidgets\r\n",
+					""
+				],
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import ipywidgets as widgets\r\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import ipywidgets as widgets\r\n",
+					"from IPython.display import display\r\n",
+					"\r\n",
+					"# 创建用户名输入框\r\n",
+					"username = widgets.Text(\r\n",
+					"    value='',\r\n",
+					"    placeholder='请输入用户名',\r\n",
+					"    description='用户名:',\r\n",
+					"    disabled=False\r\n",
+					")\r\n",
+					"\r\n",
+					"# 创建密码输入框\r\n",
+					"password = widgets.Password(\r\n",
+					"    value='',\r\n",
+					"    placeholder='请输入密码',\r\n",
+					"    description='密码:',\r\n",
+					"    disabled=False\r\n",
+					")\r\n",
+					"\r\n",
+					"# 创建提交按钮\r\n",
+					"button = widgets.Button(\r\n",
+					"    description='提交',\r\n",
+					"    disabled=False,\r\n",
+					"    button_style='',  # 也可以设置 'success', 'info', 'warning', 'danger'\r\n",
+					"    tooltip='点击提交'\r\n",
+					")\r\n",
+					"\r\n",
+					"# 用于显示输出的区域\r\n",
+					"output = widgets.Output()\r\n",
+					"\r\n",
+					"# 按钮点击事件处理函数\r\n",
+					"def on_button_clicked(b):\r\n",
+					"    with output:\r\n",
+					"        output.clear_output()  # 清除之前的输出\r\n",
+					"        print(\"用户名：\", username.value)\r\n",
+					"        print(\"密码：\", password.value)\r\n",
+					"\r\n",
+					"# 将事件处理函数绑定到按钮点击事件上\r\n",
+					"button.on_click(on_button_clicked)\r\n",
+					"\r\n",
+					"# 显示所有组件\r\n",
+					"display(username, password, button, output)"
+				],
+				"execution_count": 2
+			}
+		]
+	}
+}

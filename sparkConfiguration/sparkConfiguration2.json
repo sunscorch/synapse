@@ -1,0 +1,14 @@
+{
+	"name": "sparkConfiguration2",
+	"properties": {
+		"configs": {
+			"spark.jars": "abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/role.json,abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/role_2.json"
+		},
+		"created": "2024-08-29T05:11:21.262Z",
+		"createdBy": "admin@MngEnvMCAP737307.onmicrosoft.com",
+		"annotations": [],
+		"configMergeRule": {
+			"artifact.currentOperation.spark.jars": "replace"
+		}
+	}
+}

@@ -1,0 +1,155 @@
+{
+	"name": "Notebook 2",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "new2",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "fe02873a-02b5-46b5-a2b8-af89c54dad51"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ed0ef431-3deb-492c-a73f-2ac366d8ebba/resourceGroups/sea-adb-rg/providers/Microsoft.Synapse/workspaces/sea-synaps/bigDataPools/new2",
+				"name": "new2",
+				"type": "Spark",
+				"endpoint": "https://sea-synaps.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/new2",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"spark.range(10000000000000).count()"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"  %%configure\n",
+					"    {\n",
+					"    \"driverMemory\":\"28g\", \n",
+					"    \"driverCores\":2, // Recommended values: [4, 8, 16, 32, 64, 80]\n",
+					"    \"executorMemory\":\"28g\",\n",
+					"    \"executorCores\":2\n",
+					"}"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!ls"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!ls"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Write using AAD Auth to internal table\r\n",
+					"# Add required imports\r\n",
+					"import com.microsoft.spark.sqlanalytics\r\n",
+					"from com.microsoft.spark.sqlanalytics.Constants import Constants\r\n",
+					"\r\n",
+					"# Configure and submit the request to write to Synapse Dedicated SQL Pool\r\n",
+					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
+					"(df.write\r\n",
+					" # If `Constants.SERVER` is not provided, the `<database_name>` from the three-part table name argument\r\n",
+					" # to `synapsesql` method is used to infer the Synapse Dedicated SQL End Point.\r\n",
+					" .option(Constants.SERVER, \"dwleisun.sql.azuresynapse.net\")\r\n",
+					" # Like-wise, if `Constants.TEMP_FOLDER` is not provided, the connector will use the runtime staging directory config (see section on Configuration Options for details).\r\n",
+					" .option(Constants.TEMP_FOLDER, \"abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/tmp\")\r\n",
+					" # Choose a save mode that is apt for your use case.\r\n",
+					" # Options for save modes are \"error\" or \"errorifexists\" (default), \"overwrite\", \"append\", \"ignore\".\r\n",
+					" # refer to https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes\r\n",
+					" .mode(\"overwrite\")\r\n",
+					" # Required parameter - Three-part table name to which data will be written\r\n",
+					" .synapsesql(\"dwleisun.dbo.test\"))\r\n",
+					"\r\n",
+					""
+				]
+			}
+		]
+	}
+}

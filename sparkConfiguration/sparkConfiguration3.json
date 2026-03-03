@@ -1,0 +1,20 @@
+{
+	"name": "sparkConfiguration3",
+	"properties": {
+		"configs": {
+			"spark.blacklist.enabled": "true",
+			"spark.excludeOnFailure.killExcludedExecutors.decommission": "true",
+			"spark.blacklist.killBlacklistedExecutors": "true"
+		},
+		"created": "2024-11-25T12:54:29.126Z",
+		"createdBy": "admin@MngEnvMCAP737307.onmicrosoft.com",
+		"annotations": [
+			""
+		],
+		"configMergeRule": {
+			"artifact.currentOperation.spark.blacklist.enabled": "replace",
+			"artifact.currentOperation.spark.excludeOnFailure.killExcludedExecutors.decommission": "replace",
+			"artifact.currentOperation.spark.blacklist.killBlacklistedExecutors": "replace"
+		}
+	}
+}

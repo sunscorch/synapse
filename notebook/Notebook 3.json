@@ -1,0 +1,265 @@
+{
+	"name": "Notebook 3",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "newpool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "d5b84be0-5570-44e1-ac91-0420febac79a"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/ed0ef431-3deb-492c-a73f-2ac366d8ebba/resourceGroups/sea-adb-rg/providers/Microsoft.Synapse/workspaces/sea-synaps/bigDataPools/newpool",
+				"name": "newpool",
+				"type": "Spark",
+				"endpoint": "https://sea-synaps.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/newpool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"!nslookup \tvm-c1616765"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"java.net.InetAddress.getLocalHost.getHostAddress"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"!nslookup vm-daa71218"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					},
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					" \r\n",
+					" \r\n",
+					" val checkIpAddress = udf(() => {\r\n",
+					"      val executorIp = java.net.InetAddress.getLocalHost.getHostAddress\r\n",
+					"\r\n",
+					"      // Pattern matching to handle IP check\r\n",
+					"      executorIp match {\r\n",
+					"        case \"10.0.46.0\"  => throw new RuntimeException(s\"Blocked IP detected: $executorIp\")\r\n",
+					"        case _ => \r\n",
+					"          // Sleep for 1 second if the IP does not match\r\n",
+					"          Thread.sleep(30000)\r\n",
+					"          executorIp\r\n",
+					"      }\r\n",
+					"    })\r\n",
+					"\r\n",
+					"    // Create a DataFrame with numbers from 1 to 100\r\n",
+					"    import spark.implicits._\r\n",
+					"    val df = Seq(1 to 100: _*).toDF(\"value\")\r\n",
+					"    val resultDf = df.withColumn(\"executor_ip\", checkIpAddress())\r\n",
+					"      // Show the results\r\n",
+					"    resultDf.show(truncate = false)\r\n",
+					""
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!cat /usr/hdp/current/spark3-client/conf/driver-log4j2.properties"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"!ls /usr/hdp/current/spark3-client/conf/"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"show tables"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"DESCRIBE FORMATTED default.test"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/sea-synaps/warehouse/logging.properties\r\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"%%configure -f\r\n",
+					"{\r\n",
+					"   \"files\": [\"abfss://synapsecontainer@seaadbadls2.dfs.core.windows.net/synapse/workspaces/logging2.properties\"],\r\n",
+					"   \"conf\":\r\n",
+					"   {\r\n",
+					"   \"spark.driver.extraJavaOptions\": \"-Djava.util.logging.config.file=logging2.properties -Dlog4j2.configurationFile=file:/usr/hdp/current/spark3-client/conf/driver-log4j2.properties -Detwlogger.component=sparkdriver -DlogFilter.filename=SparkLogFilters.xml -DpatternGroup.filename=SparkPatternGroups.xml -Dlog4jspark.root.logger=INFO,console,RFA,ETW,Anonymizer -Dlog4jspark.log.dir=/var/log/sparkapp/${user.name} -Dlog4jspark.log.file=sparkdriver.log -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl -XX:+UseParallelGC -XX:+UseParallelOldGC -XX:+TieredCompilation -XX:Tier4CompileThreshold=150000 -noverify\",\r\n",
+					"   \"spark.executor.extraJavaOptions\": \"-Djava.util.logging.config.file=logging2.properties -Dlog4j2.configurationFile=file:/usr/hdp/current/spark3-client/conf/executor-log4j2.properties -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl -Dio.netty.tryReflectionSetAccessible=true -XX:+UseG1GC\"\r\n",
+					"   \r\n",
+					"   }\r\n",
+					"}\r\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"import java.sql.{Connection, DriverManager, ResultSet}\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"  // JDBC 驱动名及数据库 URL\r\n",
+					"  val driver = \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\r\n",
+					"  val url = \"jdbc:sqlserver://leisunsever.database.windows.net:1433;database=leisunsqldb\"\r\n",
+					"  val username = \"leisun\"\r\n",
+					"  val password = \"Password01!!!!\"\r\n",
+					"\r\n",
+					"  // 加载驱动\r\n",
+					"  Class.forName(driver)\r\n",
+					"\r\n",
+					"  // 获取连接\r\n",
+					"  var connection: Connection = null\r\n",
+					"  try {\r\n",
+					"    connection = DriverManager.getConnection(url, username, password)\r\n",
+					"    val statement = connection.createStatement()\r\n",
+					"    val resultSet: ResultSet = statement.executeQuery(\"SELECT TOP 5 * FROM  dbo.test\")\r\n",
+					"\r\n",
+					"    while (resultSet.next()) {\r\n",
+					"      val id = resultSet.getInt(\"id\")\r\n",
+					"      val name = resultSet.getString(\"name\")\r\n",
+					"      println(s\"ID: $id, Name: $name\")\r\n",
+					"    }\r\n",
+					"\r\n",
+					"  } catch {\r\n",
+					"    case e: Exception => e.printStackTrace()\r\n",
+					"  } finally {\r\n",
+					"    if (connection != null) connection.close()\r\n",
+					"  }"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"println(\"????\")"
+				],
+				"execution_count": 5
+			}
+		]
+	}
+}
