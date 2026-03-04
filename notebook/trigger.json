@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fa3c50f5-6643-4fda-a273-f018b141e0d2"
+				"spark.autotune.trackingId": "c693026d-4c03-4046-90b6-4805a70bfb10"
 			}
 		},
 		"metadata": {
@@ -54,7 +54,7 @@
 					"res = notebookutils.notebook.run(\"test1\")\n",
 					"print(res)"
 				],
-				"execution_count": 7
+				"execution_count": 1
 			}
 		]
 	}
