@@ -13,7 +13,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9ac94cf3-c605-4184-a12c-ce80407e0e1c"
+				"spark.autotune.trackingId": "f9646c5f-5db8-4691-8e2c-bbf54e315df9"
 			}
 		},
 		"metadata": {
@@ -31,8 +31,14 @@
 		"cells": [
 			{
 				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					}
+				},
 				"source": [
-					""
+					"%%sql\n",
+					"select 1"
 				],
 				"execution_count": null
 			}
