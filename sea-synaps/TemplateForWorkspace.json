@@ -1208,7 +1208,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "9fb492d6-a7ae-4d21-98b2-f3850b361c99"
+						"spark.autotune.trackingId": "0355140c-b7b4-443e-86ac-225dfd41621b"
 					}
 				},
 				"metadata": {
@@ -1233,8 +1233,7 @@
 						"sparkVersion": "3.5",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1279,7 +1278,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "717e546b-b5b9-4b8e-8d86-11f3448ed58d"
+						"spark.autotune.trackingId": "f7168d92-51ce-474c-9682-755f4e6043ec"
 					}
 				},
 				"metadata": {
@@ -1314,10 +1313,10 @@
 						"cell_type": "code",
 						"metadata": {},
 						"source": [
-							"notebookutils.notebook.run(\"./test1\")"
+							"notebookutils.notebook.run(\"test1\")"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 1
 					}
 				]
 			},
